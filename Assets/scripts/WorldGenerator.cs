@@ -7,6 +7,7 @@ public class WorldGenerator : MonoBehaviour {
 	public GameObject grassSpritePrefab;
 	public GameObject desertSpritePrefab;
 	public GameObject waterSpritePrefab;
+	public GameObject bushPrefab;
 
 	public float noiseScale = 30f;
 	public float lacunarity = 2f;
@@ -99,6 +100,9 @@ public class WorldGenerator : MonoBehaviour {
 			sprite = (GameObject)Instantiate (desertSpritePrefab);
 			break;
 		case Biome.Grass:
+			if (RollDice(2f)) {
+				SpawnBush (x, y);
+			}
 			sprite = (GameObject)Instantiate (grassSpritePrefab);
 			break;
 		default:
@@ -108,6 +112,12 @@ public class WorldGenerator : MonoBehaviour {
 		}
 		sprite.gameObject.GetComponent<Tile> ().SetParameters (player, spawnDistance*2);
 		sprite.transform.position = spawnpos;
+	}
+
+	private void SpawnBush(int x, int y) {
+		GameObject bush = (GameObject)Instantiate (bushPrefab);
+		bush.gameObject.GetComponent<Tile> ().SetParameters (player, spawnDistance * 2);
+		bush.transform.position = new Vector3 (x, y, 0.5f);
 	}
 
 	private Biome GetBiome(int x, int y) {
@@ -132,5 +142,9 @@ public class WorldGenerator : MonoBehaviour {
 			height += Mathf.PerlinNoise (xf * frequency, yf * frequency) * amplitude * 0.5f;
 		}
 		return height;
+	}
+
+	public bool RollDice(float chance) {
+		return Random.Range (0f, 100f) <= chance;
 	}
 }

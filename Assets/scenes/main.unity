@@ -147,6 +147,7 @@ MonoBehaviour:
     type: 2}
   waterSpritePrefab: {fileID: 1917478860599498, guid: 55050b53552230143b2498d870e86954,
     type: 2}
+  bushPrefab: {fileID: 1339691813909778, guid: c67ecc918be03a5438af273f00da908a, type: 2}
   noiseScale: 30
   lacunarity: 2
   persistance: 0.5
