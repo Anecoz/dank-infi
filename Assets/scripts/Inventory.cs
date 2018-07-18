@@ -5,8 +5,10 @@ using UnityEngine;
 public class Inventory : MonoBehaviour {
 	private List<InventoryItem> items = new List<InventoryItem>();
 
+	public ActionBar actionbar;
+
 	void Start () {
-		
+
 	}
 
 	void Update() {
