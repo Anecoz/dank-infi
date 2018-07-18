@@ -117,6 +117,7 @@ public class WorldGenerator : MonoBehaviour {
 	private void SpawnBush(int x, int y) {
 		GameObject bush = (GameObject)Instantiate (bushPrefab);
 		bush.gameObject.GetComponent<Tile> ().SetParameters (player, spawnDistance * 2);
+		bush.gameObject.GetComponent<Collectible> ().SetParameters (player, InventoryItem.Type.Wood);
 		bush.transform.position = new Vector3 (x, y, 0.5f);
 	}
 

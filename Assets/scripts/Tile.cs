@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour {
 
-	private GameObject player;
-	private float maxDistance;
+	protected GameObject player;
+	protected float maxDistance;
 	void Start () {
 		
 	}
