@@ -7,10 +7,9 @@ public class PlayerController : MonoBehaviour {
 
 	public float _speed = .5f;
 	public GameObject floorPrefab;
+    private Inventory inventory;
 
-	private Inventory inventory;
-
-	void Awake()
+    void Awake()
 	{
 		Vector2 startPos = new Vector2 (Random.Range (500, 10000), Random.Range (500, 10000));
 		transform.position = new Vector3 (startPos.x, startPos.y, 0.5f);
