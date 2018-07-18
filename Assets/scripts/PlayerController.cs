@@ -6,6 +6,9 @@ using UnityEngine.Networking;
 public class PlayerController : MonoBehaviour {
 
 	public float _speed = .5f;
+	public GameObject floorPrefab;
+
+	private Inventory inventory;
 
 	void Awake()
 	{
@@ -15,7 +18,7 @@ public class PlayerController : MonoBehaviour {
 
 	void Start()
 	{
-		
+		inventory = GetComponent<Inventory> ();
 	}
 
 	void FixedUpdate () {
@@ -25,6 +28,24 @@ public class PlayerController : MonoBehaviour {
         RotateTowardsMouse();
         transform.Translate(Vector3.right * x, Space.World);
         transform.Translate(Vector3.up * y, Space.World);
+	}
+
+	void Update() {
+		// Check if we're placing item
+		if (Input.GetMouseButtonDown(1)) {
+			if (inventory.HasType(InventoryItem.Type.Wood)) {
+				var mousePos = Input.mousePosition;
+				mousePos.z = 1;
+				mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+				mousePos.x = Mathf.Round (mousePos.x);
+				mousePos.y = Mathf.Round (mousePos.y);
+				if (Vector3.Distance (mousePos, transform.position) > 1.5f)
+					return;
+				GameObject floor = (GameObject)Instantiate (floorPrefab);
+				floor.transform.position = mousePos;
+				inventory.TakeItem (InventoryItem.Type.Wood);
+			}
+		}
 	}
 
 	private void RotateTowardsMouse() {
