@@ -8,7 +8,7 @@ public class Inventory : MonoBehaviour {
 	public ActionBar actionbar;
 
 	void Start () {
-
+		actionbar.Initialize();
 	}
 
 	void Update() {
@@ -17,7 +17,12 @@ public class Inventory : MonoBehaviour {
 
 	public void AddItem(InventoryItem item) {
 		items.Add (item);
-		Debug.Log ("Added item to inventory, type: " + item.GetType ());
+		if(actionbar.SetType(item.GetType())) {
+			Debug.Log ("Added item to inventory, type: " + item.GetType ());
+		}
+		else {
+			Debug.Log ("Inventory full!");
+		}
 	}
 
 	public bool HasType(InventoryItem.Type type) {

@@ -9,21 +9,18 @@ public class ActionBar : MonoBehaviour {
     public GameObject Wood;
 
     private int selectedSlot;
-    private Transform[] slotArray;
-    private Dictionary<int,InventoryItem.Type> slotTypeMap;
-    private Dictionary<int,GameObject> slotObjectMap;
+    private List<Transform> slotList = new List<Transform>();
+    private Dictionary<int,InventoryItem.Type> slotTypeMap = new Dictionary<int, InventoryItem.Type>();
+    private Dictionary<int,GameObject> slotObjectMap = new Dictionary<int, GameObject>();
 
-    /// <summary>
-    /// Start is called on the frame when a script is enabled just before
-    /// any of the Update methods is called the first time.
-    /// </summary>
-    void Start() {
-        selectedSlot = 1;
-        slotArray = this.GetComponentsInChildren<Transform>();
-        Array.Sort(slotArray, delegate(Transform t1, Transform t2){
-            return t1.position.x.CompareTo(t2.position.x);
-        });
+    public void Initialize() {
+        var slotArray = this.GetComponentsInChildren<Transform>();
+        for(int i=1;i<slotArray.Length;i++) {
+            slotList.Add(slotArray[i]);
+        }
 
+        selectedSlot = 0;
+        SelectSlot(selectedSlot);
         // Scale the sprite to fit the slots
         Wood.GetComponent<Transform>().localScale = new Vector3(0.5f, 0.5f, 0.5f);
     }
@@ -75,26 +72,37 @@ public class ActionBar : MonoBehaviour {
     }
 
     private void ChangeSlotSprite(int slot, Sprite sprite) {
-        GameObject spriteObj = GetSpriteObj(slot);
-        spriteObj.GetComponent<SpriteRenderer>().sprite = sprite;
+
+        if (slot >= 0 && slot < NumberOfSlots) {
+            GameObject spriteObj = slotList[slot].gameObject;
+
+            if(spriteObj != null) {
+                spriteObj.GetComponent<SpriteRenderer>().sprite = sprite;
+            }
+        }
     }
 
     private bool SetTypeToSlot(GameObject obj, InventoryItem.Type type) {
-        int slot = NumberOfSlots + 1;
+        int slot = 0;
 
         for(int i=0;i<slotTypeMap.Count;i++) {
-            if(!slotTypeMap.ContainsKey(i)) {
-                slot = i;
+            if(slotTypeMap.ContainsKey(i)) {
+                slot++;
             }
         }
         
-        if(slot < slotArray.Length) {
-            GameObject newObject = Instantiate(obj, slotArray[slot]);
-            slotObjectMap.Add(slot, newObject);
-            slotTypeMap.Add(slot, type);
+        if(slot < slotList.Count) {
+            AddNewObject(obj, slot, type);
             return true;
         }
 
         return false;
+    }
+
+    private void AddNewObject(GameObject obj, int slot, InventoryItem.Type type) {
+        GameObject newObject = Instantiate(obj, slotList[slot].transform);
+        newObject.GetComponent<SpriteRenderer>().sortingOrder = 4;
+        slotObjectMap.Add(slot, newObject);
+        slotTypeMap.Add(slot, type);
     }
 }
